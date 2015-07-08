@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'kelvin'
 import argparse
-from loadercoordinador import estudiantes, profesores, datos_base
+from loadercoordinador import estudiantes, profesores, datos_base, carga_escenarios
 
 
 def main(**kwargs):
@@ -18,7 +18,14 @@ def main(**kwargs):
         profesores.cargar_profesores_general()
     elif kwargs['load'] == "base":
         datos_base.carga_mati()
-
+    elif kwargs['load'] == "escenario":
+        if len(kwargs['numero']) > 0:
+            print("Cargando datos para el escenario")
+            carga_escenarios.carga_escenario(kwargs['numero'])
+        else:
+            print("se debe digitar el numero del escenario")
+            print("Ejemplo: -l escenario -e 2")
+            print("En este caso estamos cargando los el escenario numero 2")
     else:
         print("No existe el comando l-"+kwargs['load'])
 
@@ -31,6 +38,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--load', default='', type=str, help='Type of load to do.')
     parser.add_argument('-f', '--ofile', default='', type=str, help='File to load.')
+    parser.add_argument('-e', '--numero', default='', type=str, help='File to load.')
     args = parser.parse_args()
     print(args)
     main(**vars(args))

@@ -2,7 +2,6 @@
 from util import folder
 from loadercoordinador import maestrias
 from fork import fork_service
-import local_settings
 import csv
 import json
 import local_settings

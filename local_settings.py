@@ -7,6 +7,8 @@ path_student = base_proyect_path+"/data/student/"
 path_student_graduated = base_proyect_path+"/data/student_graduated/"
 path_teacher_graduated = base_proyect_path+"/data/teacher/"
 
+path_base_escenario = base_proyect_path+"/data/num_escenario/base/"
+
 scrumdo_username=""
 scrumdo_password=""
 scrumdo_host="http://www.scrumdo.com"

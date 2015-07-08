@@ -74,6 +74,8 @@ def carga_mati():
 
 
     print "carga de cursos de MATI"
+
+
     cursosMati = {
         "ARTI4101": {"name": "Gerencia de Proyectos para Arquitectos", "credits": 4, "summer": False},
         "ARTI4102": {"name": "Comunicación Efectiva para Arquitectos", "credits": 4, "summer": False},
@@ -85,7 +87,8 @@ def carga_mati():
         "ARTI4204": {"name": "Arquitectura de Seguridad", "credits": 4, "summer": False},
         "ARTI4205": {"name": "Arquitectura de Procesos de Negocio", "credits": 4, "summer": False},
         "ARTI4301": {"name": "Proyecto final", "credits": 4, "summer": False},
-        "ARTI4106": {"name": "Arquitectura Empresarial", "credits": 4, "summer": False}}
+        "ARTI4106": {"name": "Arquitectura Empresarial", "credits": 4, "summer": False}
+    }
 
     for codigo in cursosMati:
         analisis_datos_curso(codigo, cursosMati, maestria)
@@ -110,7 +113,8 @@ def carga_mati():
         12665: {"course": "ARTI4203", "capacity": {"MATI": 20, "MESI": 20}, "name": "1", "semester": 1, "year": 2015, "teacher": 79419382, "status": 0},
         13185: {"course": "ARTI4204", "capacity": {"MATI": 32, "pregrado": 4, "otros": 4}, "name": "1", "semester": 1, "year": 2015, "teacher": 85462189, "status": 0},
         13285: {"course": "ARTI4205", "capacity": {"MATI": 34, "pregrado": 2, "otros": 4}, "name": "1", "semester": 1, "year": 2015, "teacher": 200021872, "status": 0},
-        13582: {"course": "ARTI4301", "capacity": {"MATI": 99}, "name": "1", "semester": 1, "year": 2015, "teacher": 79505041, "status": 0}}
+        13582: {"course": "ARTI4301", "capacity": {"MATI": 99}, "name": "1", "semester": 1, "year": 2015, "teacher": 79505041, "status": 0}
+    }
 
     for seccion_p in seccionesMati:
         v_profesor = profesores.dar_profesor(p_code=seccionesMati[seccion_p]["teacher"])
