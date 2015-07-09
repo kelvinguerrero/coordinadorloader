@@ -29,6 +29,7 @@ def carga_escenario(p_numero_escenario):
                 print
         else:
             print('Ya existe la maestría')
+
     carga_cursos_base(p_numero_escenario)
     carga_secciones_base(p_numero_escenario)
 
@@ -72,8 +73,9 @@ def carga_secciones_base(p_numero_escenario):
                 name=row["NAME"],
                 semester=row["SEMESTER"],
                 year=row["YEAR"],
-                id_teacher= validar_datos.validar_datos_seccion_profesor(v_profesor),
+                id_teacher=validar_datos.validar_datos_seccion_profesor(v_profesor),
                 id_course=validar_datos.validar_datos_seccion_seccion(v_curso),
                 status=row["STATUS"]
             )
+            seccion.agregar_capacidad_seccion(row["CRN"], row["CAPACITY"])
             print(rta.text)

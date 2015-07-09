@@ -26,6 +26,24 @@ def crear_seccion(crn,name,semester,year,status,id_teacher,id_course):
     rta = fork_service.llamada_post(BASE_PATH_SECTION_CREATE, headers_section_create, data)
     return rta
 
+
+def agregar_capacidad_seccion(prm_crn_seccion, capacidad):
+    #Parametros para la creación de una Maestria
+    BASE_PATH_SECTION_CAPACIDAD = "http://localhost:8000/map/api/section/crn_seccion/"
+    headers_section_create = {
+        'API-KEY': '123',
+        'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
+    }
+
+    BASE_PATH_SECTION_CAPACIDAD = BASE_PATH_SECTION_CAPACIDAD.replace("crn_seccion", prm_crn_seccion)
+
+    data = {
+              "operation":5,
+              "jsoncapacidad":capacidad
+           }
+    rta = fork_service.llamada_post(BASE_PATH_SECTION_CAPACIDAD, headers_section_create, data)
+    return rta
+
 #
 # def dar_curso( p_code ):
 #     #Parametros para la llamada de la llamada de una maestría
