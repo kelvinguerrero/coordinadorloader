@@ -36,8 +36,8 @@ def crear_estudiantes(pprograma, pcodigo , papellido, pnombre, pemail, pstatus):
         'API-KEY': '123',
         'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
     }
-
-    BASE_PATH_STUDENT = BASE_PATH_STUDENT.replace("codigo_student", pcodigo)
+    print(pcodigo)
+    BASE_PATH_STUDENT = BASE_PATH_STUDENT.replace("codigo_student", str(pcodigo))
 
     #Se llama al servicio de llamada de estudiante para verificar si este existe
     rta_buscar_estudiante = fork_service.llamada_get(BASE_PATH_STUDENT, headers_student)
@@ -187,6 +187,18 @@ def cargar_graduados():
     for ruta in archivos:
         cargar_estudiantes_graduados(ruta)
 
+
+def dar_estudiantes( ):
+    #Parametros para la llamada de la llamada de una maestría
+    BASE_PATH_MASTER = "http://localhost:8000/map/api/student"
+    headers_master = {
+        'API-KEY': '123',
+        'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
+    }
+
+    #Se llama al servicio de llamada de estudiante para verificar si este existe
+    rta_estudiantes = fork_service.llamada_get(BASE_PATH_MASTER, headers_master)
+    return rta_estudiantes
 
 def run(*args):
 

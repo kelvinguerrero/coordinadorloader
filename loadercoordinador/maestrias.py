@@ -26,7 +26,8 @@ def dar_maestria( pnombre ):
         'API-KEY': '123',
         'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
     }
-
+    print("NOMBNRE")
+    print(pnombre)
     BASE_PATH_MASTER = BASE_PATH_MASTER.replace("param_nombre", pnombre)
 
     #Se llama al servicio de llamada de estudiante para verificar si este existe
