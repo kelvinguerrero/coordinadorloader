@@ -34,8 +34,15 @@ def carga_escenario(p_numero_escenario):
     #
     # carga_cursos_base(p_numero_escenario)
     # carga_secciones_base(p_numero_escenario)
-    #carga_estudiantes_base(p_numero_escenario)
+    # carga_estudiantes_base(p_numero_escenario)
+    # carga_estudiantes(p_numero_escenario)
     export_csv_estudiantes()
+
+
+def carga_estudiantes(p_numero_escenario):
+    path_num_escenario = "escenario"+p_numero_escenario
+    path_escenario = local_settings.path_base_escenario.replace("num_escenario",path_num_escenario)
+    estudiantes.cargar_estudiantes(path_escenario+'estudiantes.csv')
 
 def carga_cursos_base(p_numero_escenario):
 
@@ -104,12 +111,20 @@ def add_student(code, email, lastname, name, master):
 
 def export_csv_estudiantes():
     estudaintes_dic = estudiantes.dar_estudiantes()
-    list_est = json.loads(estudaintes_dic.text)
+    estudaintes_mod = estudaintes_dic.text.replace("code","CARNET")
+    estudaintes_mod = estudaintes_mod.replace("lastname","APELLIDOS")
+    estudaintes_mod = estudaintes_mod.replace("name","NOMBRES")
+    list_est = json.loads(estudaintes_mod)
+
     with open('data/escenario1/estudiantes.csv', 'wb') as f:  # Just use 'w' mode in 3.x
-        fieldnames = ['code', 'student_status', 'name', 'lastname', 'email', 'master', 'id']
+        fieldnames = ['CARNET', 'student_status', 'NOMBRES', 'APELLIDOS', 'email', 'master', 'id']
         w = csv.DictWriter(f,fieldnames=fieldnames, delimiter=' ')
         encabezados = True
         for es in list_est:
+            tmp =es["master"]
+            es["master"] = tmp["NOMBRES"]
+            del es["id"]
+            del es["student_status"]
             if encabezados:
                 w.writeheader()
                 encabezados = False
