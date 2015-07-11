@@ -11,32 +11,13 @@ import random
 
 
 def carga_escenario(p_numero_escenario):
-    # maestria = 'MAESTRIA EN ARQUITECTURAS TI'
-    # print 'creación de ' + maestria
-    #
-    # rta_dar_maestria = maestrias.dar_maestria(maestria)
-    # s_code_dar_maestria = rta_dar_maestria.status_code
-    #
-    # if rta_dar_maestria != None:
-    #     if s_code_dar_maestria == 500:
-    #         print 'No se encontro la maestría: ' + maestria
-    #
-    #         rta_crear = maestrias.crear_maesria(maestria)
-    #
-    #         if rta_crear == 500:
-    #             print "Error en la creacion de la maestria" + maestria
-    #         elif rta_crear == 200:
-    #             print('Se creó la maestria:')
-    #             print rta_crear.text
-    #             print
-    #     else:
-    #         print('Ya existe la maestría')
-    #
-    # carga_cursos_base(p_numero_escenario)
+
+
+    carga_cursos_base(p_numero_escenario)
     # carga_secciones_base(p_numero_escenario)
     # carga_estudiantes_base(p_numero_escenario)
     # carga_estudiantes(p_numero_escenario)
-    export_csv_estudiantes()
+    # export_csv_estudiantes()
 
 
 def carga_estudiantes(p_numero_escenario):
@@ -44,16 +25,264 @@ def carga_estudiantes(p_numero_escenario):
     path_escenario = local_settings.path_base_escenario.replace("num_escenario",path_num_escenario)
     estudiantes.cargar_estudiantes(path_escenario+'estudiantes.csv')
 
-def carga_cursos_base(p_numero_escenario):
 
-    maestria = 'MAESTRIA EN ARQUITECTURAS TI'
+def carga_cursos_base(p_numero_escenario):
+    carga_cursos_mati(p_numero_escenario)
+    carga_cursos_mbc(p_numero_escenario)
+    carga_cursos_mbit(p_numero_escenario)
+    carga_cursos_mesi(p_numero_escenario)
+    carga_cursos_misis(p_numero_escenario)
+    carga_cursos_miso(p_numero_escenario)
+
+
+def carga_cursos_mati(p_numero_escenario):
+    maestria = 'Maestrías en Arquitecturas de Tecnologías de Información'
+
+
+    print 'creación de ' + maestria
+
+    rta_dar_maestria = maestrias.dar_maestria(maestria)
+    s_code_dar_maestria = rta_dar_maestria.status_code
+
+    if rta_dar_maestria != None:
+        if s_code_dar_maestria == 500:
+            print 'No se encontro la maestría: ' + maestria
+
+            rta_crear = maestrias.crear_maesria(maestria)
+
+            if rta_crear == 500:
+                print "Error en la creacion de la maestria" + maestria
+            elif rta_crear == 200:
+                print('Se creó la maestria:')
+                print rta_crear.text
+                print
+        else:
+            print('Ya existe la maestría')
+
+
     print 'creación de ' + maestria
 
     print "Cargando cursos escenario "+ p_numero_escenario
     delimiter = '	'
     path_num_escenario = "escenario"+p_numero_escenario
-    path_escenario = local_settings.path_base_escenario.replace("num_escenario",path_num_escenario)
-    with open( path_escenario + "cursos_base.csv", 'rb') as csvfile:
+    path_escenario = local_settings.path_base_cursos_base.replace("num_escenario",path_num_escenario)
+    with open( path_escenario + "cursos_base_mati.csv", 'rb') as csvfile:
+        reader = csv.DictReader(csvfile,  delimiter=delimiter)
+        for row in reader:
+
+            validar_datos.analisis_datos_curso(prm_maestria= maestria)
+
+            obj_maestria = maestrias.dar_maestria(maestria)
+            json_maestria = json.loads(obj_maestria.text)
+
+            obj_pensum = maestrias.dar_pensum_maestria(json_maestria["id"])
+            json_pensum = json.loads(obj_pensum.text)
+            rta = curso.crear_curso(row['NAME'], row['CODE'], row['CREDITS'], row['SUMMER'], json_pensum[0]["id"])
+            print(rta.text)
+
+
+def carga_cursos_mbc(p_numero_escenario):
+    maestria = 'Maestría en biología computacional'
+
+
+    rta_dar_maestria = maestrias.dar_maestria(maestria)
+    s_code_dar_maestria = rta_dar_maestria.status_code
+
+    if rta_dar_maestria != None:
+        if s_code_dar_maestria == 500:
+            print 'No se encontro la maestría: ' + maestria
+
+            rta_crear = maestrias.crear_maesria(maestria)
+
+            if rta_crear == 500:
+                print "Error en la creacion de la maestria" + maestria
+            elif rta_crear == 200:
+                print('Se creó la maestria:')
+                print rta_crear.text
+                print
+        else:
+            print('Ya existe la maestría')
+
+    print 'creación de ' + maestria
+
+    print "Cargando cursos escenario "+ p_numero_escenario
+    delimiter = '	'
+    path_num_escenario = "escenario"+p_numero_escenario
+    path_escenario = local_settings.path_base_cursos_base.replace("num_escenario",path_num_escenario)
+    with open( path_escenario + "cursos_base_mbc.csv", 'rb') as csvfile:
+        reader = csv.DictReader(csvfile,  delimiter=delimiter)
+        for row in reader:
+
+            validar_datos.analisis_datos_curso(prm_maestria= maestria)
+
+            obj_maestria = maestrias.dar_maestria(maestria)
+            json_maestria = json.loads(obj_maestria.text)
+
+            obj_pensum = maestrias.dar_pensum_maestria(json_maestria["id"])
+            json_pensum = json.loads(obj_pensum.text)
+            rta = curso.crear_curso(row['NAME'], row['CODE'], row['CREDITS'], row['SUMMER'], json_pensum[0]["id"])
+            print(rta.text)
+
+
+def carga_cursos_mbit(p_numero_escenario):
+    maestria = 'Maestría en tecnologías de Información para el Negocio'
+
+    rta_dar_maestria = maestrias.dar_maestria(maestria)
+    s_code_dar_maestria = rta_dar_maestria.status_code
+
+    if rta_dar_maestria != None:
+        if s_code_dar_maestria == 500:
+            print 'No se encontro la maestría: ' + maestria
+
+            rta_crear = maestrias.crear_maesria(maestria)
+
+            if rta_crear == 500:
+                print "Error en la creacion de la maestria" + maestria
+            elif rta_crear == 200:
+                print('Se creó la maestria:')
+                print rta_crear.text
+                print
+        else:
+            print('Ya existe la maestría')
+
+
+
+    print 'creación de ' + maestria
+
+    print "Cargando cursos escenario "+ p_numero_escenario
+    delimiter = '	'
+    path_num_escenario = "escenario"+p_numero_escenario
+    path_escenario = local_settings.path_base_cursos_base.replace("num_escenario",path_num_escenario)
+    with open( path_escenario + "cursos_base_mbit.csv", 'rb') as csvfile:
+        reader = csv.DictReader(csvfile,  delimiter=delimiter)
+        for row in reader:
+
+            validar_datos.analisis_datos_curso(prm_maestria= maestria)
+
+            obj_maestria = maestrias.dar_maestria(maestria)
+            json_maestria = json.loads(obj_maestria.text)
+
+            obj_pensum = maestrias.dar_pensum_maestria(json_maestria["id"])
+            json_pensum = json.loads(obj_pensum.text)
+            rta = curso.crear_curso(row['NAME'], row['CODE'], row['CREDITS'], row['SUMMER'], json_pensum[0]["id"])
+            print(rta.text)
+
+
+def carga_cursos_mesi(p_numero_escenario):
+    maestria = 'Maestría en Seguridad de la Información'
+
+    rta_dar_maestria = maestrias.dar_maestria(maestria)
+    s_code_dar_maestria = rta_dar_maestria.status_code
+
+    if rta_dar_maestria != None:
+        if s_code_dar_maestria == 500:
+            print 'No se encontro la maestría: ' + maestria
+
+            rta_crear = maestrias.crear_maesria(maestria)
+
+            if rta_crear == 500:
+                print "Error en la creacion de la maestria" + maestria
+            elif rta_crear == 200:
+                print('Se creó la maestria:')
+                print rta_crear.text
+                print
+        else:
+            print('Ya existe la maestría')
+
+
+    print 'creación de ' + maestria
+
+    print "Cargando cursos escenario "+ p_numero_escenario
+    delimiter = '	'
+    path_num_escenario = "escenario"+p_numero_escenario
+    path_escenario = local_settings.path_base_cursos_base.replace("num_escenario",path_num_escenario)
+    with open( path_escenario + "cursos_base_mesi.csv", 'rb') as csvfile:
+        reader = csv.DictReader(csvfile,  delimiter=delimiter)
+        for row in reader:
+
+            validar_datos.analisis_datos_curso(prm_maestria= maestria)
+
+            obj_maestria = maestrias.dar_maestria(maestria)
+            json_maestria = json.loads(obj_maestria.text)
+
+            obj_pensum = maestrias.dar_pensum_maestria(json_maestria["id"])
+            json_pensum = json.loads(obj_pensum.text)
+            rta = curso.crear_curso(row['NAME'], row['CODE'], row['CREDITS'], row['SUMMER'], json_pensum[0]["id"])
+            print(rta.text)
+
+
+def carga_cursos_misis(p_numero_escenario):
+    maestria = 'Maestría en Ingeniería de Sistemas y Computación'
+
+    rta_dar_maestria = maestrias.dar_maestria(maestria)
+    s_code_dar_maestria = rta_dar_maestria.status_code
+
+    if rta_dar_maestria != None:
+        if s_code_dar_maestria == 500:
+            print 'No se encontro la maestría: ' + maestria
+
+            rta_crear = maestrias.crear_maesria(maestria)
+
+            if rta_crear == 500:
+                print "Error en la creacion de la maestria" + maestria
+            elif rta_crear == 200:
+                print('Se creó la maestria:')
+                print rta_crear.text
+                print
+        else:
+            print('Ya existe la maestría')
+
+
+    print 'creación de ' + maestria
+
+    print "Cargando cursos escenario "+ p_numero_escenario
+    delimiter = '	'
+    path_num_escenario = "escenario"+p_numero_escenario
+    path_escenario = local_settings.path_base_cursos_base.replace("num_escenario",path_num_escenario)
+    with open( path_escenario + "cursos_base_misis.csv", 'rb') as csvfile:
+        reader = csv.DictReader(csvfile,  delimiter=delimiter)
+        for row in reader:
+
+            validar_datos.analisis_datos_curso(prm_maestria= maestria)
+
+            obj_maestria = maestrias.dar_maestria(maestria)
+            json_maestria = json.loads(obj_maestria.text)
+
+            obj_pensum = maestrias.dar_pensum_maestria(json_maestria["id"])
+            json_pensum = json.loads(obj_pensum.text)
+            rta = curso.crear_curso(row['NAME'], row['CODE'], row['CREDITS'], row['SUMMER'], json_pensum[0]["id"])
+            print(rta.text)
+
+
+def carga_cursos_miso(p_numero_escenario):
+    maestria = 'Maestría en Ingenieria de Software'
+
+
+    rta_dar_maestria = maestrias.dar_maestria(maestria)
+    s_code_dar_maestria = rta_dar_maestria.status_code
+
+    if rta_dar_maestria != None:
+        if s_code_dar_maestria == 500:
+            print 'No se encontro la maestría: ' + maestria
+
+            rta_crear = maestrias.crear_maesria(maestria)
+
+            if rta_crear == 500:
+                print "Error en la creacion de la maestria" + maestria
+            elif rta_crear == 200:
+                print('Se creó la maestria:')
+                print rta_crear.text
+                print
+        else:
+            print('Ya existe la maestría')
+
+    print 'creación de ' + maestria
+
+    print "Cargando cursos escenario "+ p_numero_escenario
+    delimiter = '	'
+    path_num_escenario = "escenario"+p_numero_escenario
+    path_escenario = local_settings.path_base_cursos_base.replace("num_escenario",path_num_escenario)
+    with open( path_escenario + "cursos_base_miso.csv", 'rb') as csvfile:
         reader = csv.DictReader(csvfile,  delimiter=delimiter)
         for row in reader:
 
@@ -117,7 +346,7 @@ def export_csv_estudiantes():
     list_est = json.loads(estudaintes_mod)
 
     with open('data/escenario1/estudiantes.csv', 'wb') as f:  # Just use 'w' mode in 3.x
-        fieldnames = ['CARNET', 'student_status', 'NOMBRES', 'APELLIDOS', 'email', 'master', 'id']
+        fieldnames = ['CARNET', 'NOMBRES', 'APELLIDOS', 'email', 'master']
         w = csv.DictWriter(f,fieldnames=fieldnames, delimiter=' ')
         encabezados = True
         for es in list_est:
