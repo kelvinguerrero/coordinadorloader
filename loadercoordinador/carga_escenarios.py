@@ -12,18 +12,18 @@ import random
 
 def carga_escenario(p_numero_escenario):
 
-
     carga_cursos_base(p_numero_escenario)
-    # carga_secciones_base(p_numero_escenario)
+    carga_secciones_base(p_numero_escenario)
+    #Metodo para crear estudiantes ramdom
     # carga_estudiantes_base(p_numero_escenario)
-    # carga_estudiantes(p_numero_escenario)
-    # export_csv_estudiantes()
+    carga_estudiantes(p_numero_escenario)
+    #export_csv_estudiantes()
 
 
 def carga_estudiantes(p_numero_escenario):
     path_num_escenario = "escenario"+p_numero_escenario
-    path_escenario = local_settings.path_base_escenario.replace("num_escenario",path_num_escenario)
-    estudiantes.cargar_estudiantes(path_escenario+'estudiantes.csv')
+    path_escenario = local_settings.path_student_escenario.replace("num_escenario",path_num_escenario)
+    estudiantes.cargar_estudiantes_escenario(path_escenario+'/estudiantes.csv')
 
 
 def carga_cursos_base(p_numero_escenario):
@@ -347,7 +347,8 @@ def export_csv_estudiantes():
 
     with open('data/escenario1/estudiantes.csv', 'wb') as f:  # Just use 'w' mode in 3.x
         fieldnames = ['CARNET', 'NOMBRES', 'APELLIDOS', 'email', 'master']
-        w = csv.DictWriter(f,fieldnames=fieldnames, delimiter=' ')
+        w = csv.DictWriter(f, delimiter=';',fieldnames=fieldnames,
+                           quoting=csv.QUOTE_NONE)
         encabezados = True
         for es in list_est:
             tmp =es["master"]

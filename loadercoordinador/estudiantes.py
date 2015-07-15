@@ -36,7 +36,6 @@ def crear_estudiantes(pprograma, pcodigo , papellido, pnombre, pemail, pstatus):
         'API-KEY': '123',
         'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
     }
-    print(pcodigo)
     BASE_PATH_STUDENT = BASE_PATH_STUDENT.replace("codigo_student", str(pcodigo))
 
     #Se llama al servicio de llamada de estudiante para verificar si este existe
@@ -92,6 +91,17 @@ def cargar_estudiantes( parchivo ):
         reader = csv.DictReader(csvfile,  delimiter=delimiter)
         for row in reader:
             crear_estudiantes(row['PROGRAMA'], row['CARNET'] , row['APELLIDOS'], row['NOMBRES'], row['EMAIL'], 1)
+
+
+def cargar_estudiantes_escenario( parchivo ):
+    print parchivo
+    delimiter = ';'
+    with open( parchivo, 'rb') as csvfile:
+        reader = csv.DictReader(csvfile,  delimiter=delimiter)
+        print('Cargando estudiantes')
+        for row in reader:
+            crear_estudiantes(row['master'], row['CARNET'] , row['APELLIDOS'], row['NOMBRES'], row['email'], 1)
+        print('Estudiantes cargados')
 
 
 def cargar_estudiantes_graduados(parchivo):

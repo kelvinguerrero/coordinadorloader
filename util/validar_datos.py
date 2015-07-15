@@ -60,5 +60,5 @@ def analisis_datos_curso(prm_maestria):
                 print
                 obj_pensum = maestrias.dar_pensum_maestria(json_maestria["id"])
     json_pensum = json.loads(obj_pensum.text)
-    print( json_pensum )
-    print( json_maestria )
+    #print( json_pensum )
+    #print( json_maestria )
