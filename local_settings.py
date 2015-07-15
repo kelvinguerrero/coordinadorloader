@@ -2,6 +2,15 @@
 __author__ = 'kelvin Guerrero'
 import os
 
+#Maestrias
+MATI = 'Maestrías en Arquitecturas de Tecnologías de Información'
+MBC = 'Maestría en biología computacional'
+MBIT = 'Maestría en tecnologías de Información para el Negocio'
+MESI = 'Maestría en Seguridad de la Información'
+MISIS = 'Maestría en Ingeniería de Sistemas y Computación'
+MISO = 'Maestría en Ingenieria de Software'
+
+
 base_proyect_path = os.getcwd()
 path_student = base_proyect_path+"/data/student/"
 path_student_graduated = base_proyect_path+"/data/student_graduated/"
@@ -9,6 +18,7 @@ path_teacher_graduated = base_proyect_path+"/data/teacher/"
 
 path_base_escenario = base_proyect_path+"/data/num_escenario/base/"
 path_base_cursos_base = base_proyect_path+"/data/num_escenario/base/cursos/"
+path_base_secciones_base = base_proyect_path+"/data/num_escenario/base/cursos/"
 path_student_escenario = base_proyect_path+"/data/num_escenario"
 
 scrumdo_username=""

@@ -210,22 +210,38 @@ def dar_estudiantes( ):
     rta_estudiantes = fork_service.llamada_get(BASE_PATH_MASTER, headers_master)
     return rta_estudiantes
 
-def run(*args):
 
-    if len(args) == 2:
-        if args[0] == "estudiantes" and args[1] != None:
-            if ".csv" in args[1]:
-                cargar_estudiantes(args[1])
-            else:
-                print "Error en el formato del archivo"
-        else:
-            print ("Error en los parametros de entrada")
-    elif len(args) ==1:
-        if 'estudiantes' in args:
-            cargar_estudiantes_general( )
-        elif 'graduados' in args:
-            cargar_estudiantes_graduados( )
-        else:
-            print "comando incorrecto"
-    else:
-        print ("Solo se aceptan uno o dos parametros de entrada")
+def verificar_existe_curso(codigo_curso, id_estudiante):
+    #Parametros para la llamada de la llamada de una maestría
+    BASE_PATH_COURSE = "http://localhost:8000/map/api/student/id_estudiante/?operation=5&code_curso=num_codigo_curso"
+    headers_master = {
+        'API-KEY': '123',
+        'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
+    }
+    BASE_PATH_COURSE = BASE_PATH_COURSE.replace("id_estudiante", str(id_estudiante))
+    BASE_PATH_COURSE = BASE_PATH_COURSE.replace("num_codigo_curso", str(codigo_curso))
+
+
+    #Se llama al servicio de llamada de estudiante para verificar si este existe
+    rta_estudiantes = fork_service.llamada_get(BASE_PATH_COURSE, headers_master)
+    return rta_estudiantes
+
+
+def agregar_curso_aprobado(prm_id_estudiante, prm_id_seccion):
+    #Parametros para la llamada de la llamada de una maestría
+    BASE_PATH_COURSE = "http://localhost:8000/map/api/subject/"
+    headers_master = {
+        'API-KEY': '123',
+        'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
+    }
+
+    data = {
+                "grade": 3,
+                "student_status": True,
+                "student": prm_id_estudiante,
+                "section": prm_id_seccion
+            }
+
+    #Se llama al servicio de llamada de estudiante para verificar si este existe
+    rta_registro = fork_service.llamada_post(BASE_PATH_COURSE, headers_master, data)
+    return rta_registro

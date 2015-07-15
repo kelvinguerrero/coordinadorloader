@@ -124,4 +124,3 @@ Copyright & License
 -------------------
 
   * Copyright 2015, Kelvin Dario Guerrero Avila
-  * License: MIT

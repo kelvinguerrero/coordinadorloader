@@ -32,8 +32,8 @@ def dar_pensum( pnombre ):
     BASE_PATH_MASTER = BASE_PATH_MASTER.replace("param_nombre", pnombre)
 
     #Se llama al servicio de llamada de estudiante para verificar si este existe
-    rta_buscar_estudiante = fork_service.llamada_get(BASE_PATH_MASTER, headers_master)
-    return rta_buscar_estudiante
+    rta = fork_service.llamada_get(BASE_PATH_MASTER, headers_master)
+    return rta
 
 
 def dar_pensum_maestria( pnombre_maestria ):
@@ -44,12 +44,21 @@ def dar_pensum_maestria( pnombre_maestria ):
         'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
     }
 
-    #BASE_PATH_MASTER = BASE_PATH_MASTER.replace("param_nombre", pnombre)
+    BASE_PATH_MASTER = BASE_PATH_MASTER.replace("param_nombre", pnombre_maestria)
 
     #Se llama al servicio de llamada de estudiante para verificar si este existe
     rta_buscar_estudiante = fork_service.llamada_get(BASE_PATH_MASTER, headers_master)
     return rta_buscar_estudiante
 
-def run(*args):
-    print args[0]
-    crear_maesria(args[0])
+
+def dar_cursos_pensum(id_pensum):
+    #Parametros para la llamada de la llamada de una maestría
+    BASE_PATH_MASTER = "http://localhost:8000/map/api/pensum/id_pensum/?operation=1"
+    BASE_PATH_MASTER = BASE_PATH_MASTER.replace("id_pensum", str(id_pensum))
+
+    headers_master = {
+        'API-KEY': '123',
+        'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
+    }
+    rta_cursos_del_pensum = fork_service.llamada_get(BASE_PATH_MASTER, headers_master)
+    return rta_cursos_del_pensum
