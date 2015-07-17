@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from util import folder
-from loadercoordinador import maestrias
+from loadercoordinador import maestrias, seccion
 from fork import fork_service
 import csv
 import json
 import local_settings
+import ast
 
 __author__ = 'kelvin Guerrero'
 
@@ -20,17 +21,17 @@ def servicio_crear_estudiante( pdata ):
 
     rta = fork_service.llamada_post(BASE_PATH, headers, pdata)
     s_code_creacion = rta.status_code
-
-    if s_code_creacion == 500:
-        json_rta = json.loads(rta.text)
-        return json_rta['mensaje']
-    elif s_code_creacion == 200:
-        json_rta = json.loads(rta.text)
-        return json_rta
+    return rta
+    # if s_code_creacion == 500:
+    #     json_rta = json.loads(rta.text)
+    #     return json_rta['mensaje']
+    # elif s_code_creacion == 200:
+    #     json_rta = json.loads(rta.text)
+    #     return json_rta
 
 
 def crear_estudiantes(pprograma, pcodigo , papellido, pnombre, pemail, pstatus):
-     #Parametros para la llamada de la llamada de un estudiante
+    #Parametros para la llamada de la llamada de un estudiante
     BASE_PATH_STUDENT = "http://localhost:8000/map/api/student/codigo_student/?operation=6"
     headers_student = {
         'API-KEY': '123',
@@ -41,14 +42,16 @@ def crear_estudiantes(pprograma, pcodigo , papellido, pnombre, pemail, pstatus):
     #Se llama al servicio de llamada de estudiante para verificar si este existe
     rta_buscar_estudiante = fork_service.llamada_get(BASE_PATH_STUDENT, headers_student)
     s_code = rta_buscar_estudiante.status_code
+
     if s_code == 500:
         json_rta = json.loads(rta_buscar_estudiante.text)['mensaje']
         if json_rta == 'No existe el estudiante':
 
             rta_dar_maestria = maestrias.dar_maestria(pprograma)
             s_code_dar_maestria = rta_dar_maestria.status_code
-
+            json_maestria = {}
             if rta_dar_maestria != None:
+
                 if s_code_dar_maestria == 500:
                     print 'No se encontro la maestría: ' + pprograma
 
@@ -58,30 +61,33 @@ def crear_estudiantes(pprograma, pcodigo , papellido, pnombre, pemail, pstatus):
                         print "Error en la creacion de la maestria" + pprograma
                     elif rta_crear == 200:
                         print('Se creó la maestria:')
-                        print rta_crear.text
-                        print
+                        json_maestria = json.loads(rta_crear.text)
 
                 elif s_code_dar_maestria == 200:
+
                     decode_dar_maestria = rta_dar_maestria.text
                     json_maestria = json.loads(decode_dar_maestria)
-                    master_id=json_maestria["id"]
-                    data = {
-                        'lastname': papellido,
-                        'code': pcodigo,
-                        'email': pemail,
-                        'name': pnombre,
-                        'student_status': pstatus,
-                        'master_id': master_id
-                    }
-                    rta = servicio_crear_estudiante( data )
-                    print rta
-                else:
-                    print "Error en el estudiante" + pcodigo
+
+                master_id=json_maestria["id"]
+                data = {
+                    'lastname': papellido,
+                    'code': pcodigo,
+                    'email': pemail,
+                    'name': pnombre,
+                    'student_status': pstatus,
+                    'master_id': master_id
+                }
+
+                rta = servicio_crear_estudiante(data)
+                return rta
+
+
             else:
                 print "Error en la busqueda de la maestría: " + pcodigo
 
     else:
         print "Estudiante ya existe: " + pcodigo
+        return rta_buscar_estudiante
 
 
 def cargar_estudiantes( parchivo ):
@@ -100,8 +106,18 @@ def cargar_estudiantes_escenario( parchivo ):
         reader = csv.DictReader(csvfile,  delimiter=delimiter)
         print('Cargando estudiantes')
         for row in reader:
-            crear_estudiantes(row['master'], row['CARNET'] , row['APELLIDOS'], row['NOMBRES'], row['email'], 1)
+            est = crear_estudiantes(row['master'], row['CARNET'] , row['APELLIDOS'], row['NOMBRES'], row['email'], 1)
+            json_estudiante = json.loads(est.text)
+            cargar_secciones(row['SECCIONES'], json_estudiante["id"])
         print('Estudiantes cargados')
+
+
+def cargar_secciones(secciones, id_estudiante):
+    a = ast.literal_eval(secciones)
+    for sec in a:
+        rta = seccion.dar_seccion_crn(sec)
+        js_seccion = json.loads(rta.text)
+        agregar_curso_aprobado(str(js_seccion["id"]),str(id_estudiante))
 
 
 def cargar_estudiantes_graduados(parchivo):
@@ -227,7 +243,7 @@ def verificar_existe_curso(codigo_curso, id_estudiante):
     return rta_estudiantes
 
 
-def agregar_curso_aprobado(prm_id_estudiante, prm_id_seccion):
+def agregar_curso_aprobado(prm_id_seccion, prm_id_estudiante):
     #Parametros para la llamada de la llamada de una maestría
     BASE_PATH_COURSE = "http://localhost:8000/map/api/subject/"
     headers_master = {
@@ -245,3 +261,18 @@ def agregar_curso_aprobado(prm_id_estudiante, prm_id_seccion):
     #Se llama al servicio de llamada de estudiante para verificar si este existe
     rta_registro = fork_service.llamada_post(BASE_PATH_COURSE, headers_master, data)
     return rta_registro
+
+
+def dar_secciones_estudiantes(prm_id_estudiante):
+    #Parametros para la llamada de la llamada de una maestría
+    BASE_PATH_COURSE = "http://localhost:8000/map/api/student/id_estudiante/?operation=1"
+    headers_master = {
+        'API-KEY': '123',
+        'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
+    }
+    BASE_PATH_COURSE = BASE_PATH_COURSE.replace("id_estudiante", str(prm_id_estudiante))
+
+    #Se llama al servicio de llamada de estudiante para verificar si este existe
+    rta_secciones = fork_service.llamada_get(BASE_PATH_COURSE, headers_master)
+    return rta_secciones
+

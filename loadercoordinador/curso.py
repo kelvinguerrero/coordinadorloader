@@ -37,3 +37,18 @@ def dar_curso( p_code ):
     rta_buscar_curso = fork_service.llamada_get(BASE_PATH_COURSE, headers_course)
 
     return rta_buscar_curso
+
+
+def dar_seccion_curso(p_id_curso):
+    #Parametros para la_ llamada de la llamada de una maestría
+    BASE_PATH_SECCIONES_COURSE = "http://localhost:8000/map/api/course/id_curso/?operation=1"
+    headers_course = {
+        'API-KEY': '123',
+        'Authorization': 'Token ef3859d862f572ad532fceb04536e948da1d5270'
+    }
+
+    BASE_PATH_SECCIONES_COURSE = BASE_PATH_SECCIONES_COURSE.replace("id_curso", str(p_id_curso))
+    #Se llama al servicio de llamada de estudiante para verificar si este existe
+    rta_buscar_curso = fork_service.llamada_get(BASE_PATH_SECCIONES_COURSE, headers_course)
+
+    return rta_buscar_curso
