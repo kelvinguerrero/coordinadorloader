@@ -56,10 +56,9 @@ def crear_estudiantes(pprograma, pcodigo , papellido, pnombre, pemail, pstatus):
                     print 'No se encontro la maestría: ' + pprograma
 
                     rta_crear = maestrias.crear_maesria(pprograma)
-
-                    if rta_crear == 500:
+                    if rta_crear.status_code == 500:
                         print "Error en la creacion de la maestria" + pprograma
-                    elif rta_crear == 200:
+                    elif rta_crear.status_code == 200:
                         print('Se creó la maestria:')
                         json_maestria = json.loads(rta_crear.text)
 
@@ -113,11 +112,14 @@ def cargar_estudiantes_escenario( parchivo ):
 
 
 def cargar_secciones(secciones, id_estudiante):
-    a = ast.literal_eval(secciones)
-    for sec in a:
+    listadoSecciones = ast.literal_eval(secciones)
+    for sec in listadoSecciones:
         rta = seccion.dar_seccion_crn(sec)
-        js_seccion = json.loads(rta.text)
-        agregar_curso_aprobado(str(js_seccion["id"]),str(id_estudiante))
+        if rta.status_code == 200:
+            js_seccion = json.loads(rta.text)
+            agregar_curso_aprobado(str(js_seccion["id"]), str(id_estudiante))
+        else:
+            print "No se agrego la sección: " + str(sec) + " al" + "estudiante:" + str(id_estudiante)
 
 
 def cargar_estudiantes_graduados(parchivo):

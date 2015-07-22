@@ -9,6 +9,7 @@ MBIT = 'Maestría en tecnologías de Información para el Negocio'
 MESI = 'Maestría en Seguridad de la Información'
 MISIS = 'Maestría en Ingeniería de Sistemas y Computación'
 MISO = 'Maestría en Ingenieria de Software'
+LENG = 'Lenguajes'
 
 
 base_proyect_path = os.getcwd()
