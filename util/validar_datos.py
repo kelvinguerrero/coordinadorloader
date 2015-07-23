@@ -5,9 +5,6 @@ from loadercoordinador import maestrias, pensum
 
 
 def validar_datos_seccion_profesor(p_v_profesor):
-    print("PROFESOR")
-    print(p_v_profesor.text)
-    print(p_v_profesor.status_code)
     respuesta = None
     if p_v_profesor.status_code == 200:
         json_profesor = json.loads(p_v_profesor.text)

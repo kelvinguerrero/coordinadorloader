@@ -85,7 +85,7 @@ def crear_estudiantes(pprograma, pcodigo , papellido, pnombre, pemail, pstatus):
                 print "Error en la busqueda de la maestría: " + pcodigo
 
     else:
-        print "Estudiante ya existe: " + pcodigo
+        print "Estudiante ya existe: " + str(pcodigo)
         return rta_buscar_estudiante
 
 
@@ -110,6 +110,16 @@ def cargar_estudiantes_escenario( parchivo ):
             cargar_secciones(row['SECCIONES'], json_estudiante["id"])
         print('Estudiantes cargados')
 
+
+def cargar_estudiantes_escenario_sin_secciones( parchivo ):
+    print parchivo
+    delimiter = ';'
+    with open( parchivo, 'rb') as csvfile:
+        reader = csv.DictReader(csvfile,  delimiter=delimiter)
+        print('Cargando estudiantes')
+        for row in reader:
+            est = crear_estudiantes(row['master'], row['CARNET'] , row['APELLIDOS'], row['NOMBRES'], row['email'], 1)
+        print('Estudiantes cargados')
 
 def cargar_secciones(secciones, id_estudiante):
     listadoSecciones = ast.literal_eval(secciones)

@@ -3,7 +3,7 @@ __author__ = 'kelvin'
 
 from faker import Factory
 from loadercoordinador import maestrias, curso, profesores, seccion, estudiantes, pensum
-from util import validar_datos
+from util import validar_datos,validar_cursos_mati
 import local_settings
 import csv
 import json
@@ -13,11 +13,25 @@ import random
 #Metodo para crear estudiantes ramdom
 # carga_estudiantes_base(p_numero_escenario)
 #export_csv_estudiantes()
-#carga_cursos_estudiantes(p_numero_escenario)
+def crear_escenario(p_numero_escenario):
+    carga_cursos_base(p_numero_escenario)
+    carga_secciones_base(p_numero_escenario)
+    generar_estudiantes_base_random(p_numero_escenario)
+    exportar_estudiantes_csv(p_numero_escenario)
+    carga_cursos_estudiantes(p_numero_escenario)
+    exportar_estudiantes_csv(p_numero_escenario)
+
+
 def carga_escenario(p_numero_escenario):
     carga_cursos_base(p_numero_escenario)
     carga_secciones_base(p_numero_escenario)
     carga_estudiantes(p_numero_escenario)
+
+
+def carga_estudiantes_sin_secciones(p_numero_escenario):
+    path_num_escenario = "escenario"+p_numero_escenario
+    path_escenario = local_settings.path_student_escenario.replace("num_escenario",path_num_escenario)
+    estudiantes.cargar_estudiantes_escenario_sin_secciones(path_escenario+'/estudiantes.csv')
 
 
 def carga_estudiantes(p_numero_escenario):
@@ -295,6 +309,7 @@ def carga_cursos_miso(p_numero_escenario):
             rta = curso.crear_curso(row['NAME'], row['CODE'], row['CREDITS'], row['SUMMER'], json_pensum[0]["id"])
             print(rta.text)
 
+
 def carga_cursos_lenguajes(p_numero_escenario):
     maestria = local_settings.LENG
 
@@ -484,6 +499,7 @@ def carga_secciones_miso(p_numero_escenario):
             seccion.agregar_capacidad_seccion(row["CRN"], row["CAPACITY"])
             print(rta.text)
 
+
 def carga_secciones_lenguajes(p_numero_escenario):
     print "Cargando secciones escenario "+ p_numero_escenario
     delimiter = '	'
@@ -507,17 +523,6 @@ def carga_secciones_lenguajes(p_numero_escenario):
             print(rta.text)
 
 
-def carga_estudiantes_base(p_numero_escenario):
-    maestria = 'MAESTRIA EN ARQUITECTURAS TI'
-    fake = Factory.create()
-    for x in range(0, 200):
-        es_last_name = fake.lastName()
-        es_name = fake.firstName()
-        es_email = fake.email()
-        es_code = random.randint(199000000,201599999)
-        add_student(code=es_code,email=es_email,lastname=es_last_name,name=es_name,master=maestria)
-
-
 #Metodo encargado de crear un estudiante
 # params: code => codigo del estudiante, email => email del estudiante, lastname => apellido del estudiante,
 #         name => Nombre del estudiante, master
@@ -528,35 +533,32 @@ def add_student(code, email, lastname, name, master):
 def carga_cursos_estudiantes(p_numero_escenario):
     rta = estudiantes.dar_estudiantes()
     list_estudiante = json.loads(rta.text)
+    print ("Creando Cursos")
     for estudiante in list_estudiante:
-        print
-        print(estudiante)
-        print
+        print ".",
+        print "."
         curso_uno = False
         numero = 0
+        ingles = False
+        creditos = 0
         while not curso_uno:
             pensum_mati = pensum.dar_pensum_maestria(local_settings.MATI)
             json_p_mati = json.loads(pensum_mati.text)
             curso_obj = dar_curso_random(json_p_mati["id"])
             rta = estudiantes.verificar_existe_curso(curso_obj["id"],estudiante["id"])
             if rta.status_code == 500:
-                secciones_curso = curso.dar_seccion_curso(curso_obj["id"])
-                list_secciones = json.loads(secciones_curso.text)
-                estudiantes.agregar_curso_aprobado(list_secciones[0]["id"],estudiante["id"])
-                numero = numero + 1
-                print("Creo curso" + str(numero))
+                rta_validacion = validar_cursos_mati.validar_curso_mati(creditos,ingles,curso_obj['code'])
+                if rta_validacion:
+                    secciones_curso = curso.dar_seccion_curso(curso_obj["id"])
+                    list_secciones = json.loads(secciones_curso.text)
+                    estudiantes.agregar_curso_aprobado(list_secciones[0]["id"],estudiante["id"])
+                    numero = numero + 1
+                    creditos = creditos + curso_obj['credits']
             if numero == 7:
                 curso_uno = True
+    print("Cursos Creados Correctamente")
 
 
-#print(pensum_rta)
-#pensum_rta = pensum.dar_pensum_maestria(local_settings.MATI)
-#pensum_rta = pensum.dar_pensum_maestria(local_settings.MATI)
-#pensum_rta = pensum.dar_pensum_maestria(local_settings.MISO)
-# json_pensum = json.loads(pensum_rta.text)
-# id_pensum = json_pensum["id"]
-# curso_obj = dar_curso_random(id_pensum)
-#print(curso_obj)
 def dar_curso_random(id_pensum):
     cursos = pensum.dar_cursos_pensum(id_pensum)
     list_cursos = json.loads(cursos.text)
@@ -565,14 +567,14 @@ def dar_curso_random(id_pensum):
 
 
 #def export_csv_cursos_estudiantes()
-def export_csv_estudiantes():
+def exportar_estudiantes_csv(numEscenario):
     estudaintes_dic = estudiantes.dar_estudiantes()
     estudaintes_mod = estudaintes_dic.text.replace("code","CARNET")
     estudaintes_mod = estudaintes_mod.replace("lastname","APELLIDOS")
     estudaintes_mod = estudaintes_mod.replace("name","NOMBRES")
     list_est = json.loads(estudaintes_mod)
 
-    with open('data/escenario1/estudiantes.csv', 'wb') as f:  # Just use 'w' mode in 3.x
+    with open('data/escenario'+str(numEscenario)+'/estudiantes.csv', 'wb') as f:  # Just use 'w' mode in 3.x
         fieldnames = ['CARNET', 'NOMBRES', 'APELLIDOS', 'email', 'master','SECCIONES']
         w = csv.DictWriter(f, delimiter=';',fieldnames=fieldnames,
                            quoting=csv.QUOTE_NONE)
@@ -591,4 +593,16 @@ def export_csv_estudiantes():
             if encabezados:
                 w.writeheader()
                 encabezados = False
+            es['master'] = es['master'].encode('utf8')
             w.writerow(es)
+
+
+def generar_estudiantes_base_random(p_numero_escenario):
+    maestria = 'MAESTRIA EN ARQUITECTURAS TI'
+    fake = Factory.create()
+    for x in range(0, 200):
+        es_last_name = fake.lastName()
+        es_name = fake.firstName()
+        es_email = fake.email()
+        es_code = random.randint(199000000,201599999)
+        add_student(code=es_code,email=es_email,lastname=es_last_name,name=es_name,master=maestria)

@@ -26,6 +26,9 @@ def main(**kwargs):
             print("se debe digitar el numero del escenario")
             print("Ejemplo: -l escenario -e 2")
             print("En este caso estamos cargando los el escenario numero 2")
+    elif kwargs['create'] > 0:
+        print("Creando el escenario" + kwargs['create'])
+        carga_escenarios.crear_escenario(kwargs['create'])
     else:
         print("No existe el comando l-"+kwargs['load'])
 
@@ -36,6 +39,7 @@ def main(**kwargs):
 # Estudiantes graduados: python main.py -l graduados
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--create', default='', type=str, help='Type of load to do.')
     parser.add_argument('-l', '--load', default='', type=str, help='Type of load to do.')
     parser.add_argument('-f', '--ofile', default='', type=str, help='File to load.')
     parser.add_argument('-e', '--numero', default='', type=str, help='File to load.')

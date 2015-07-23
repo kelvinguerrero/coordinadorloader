@@ -22,6 +22,19 @@ path_base_cursos_base = base_proyect_path+"/data/num_escenario/base/cursos/"
 path_base_secciones_base = base_proyect_path+"/data/num_escenario/base/secciones/"
 path_student_escenario = base_proyect_path+"/data/num_escenario"
 
+cursos_reglas_mati  =   {   'ARTI4101':{'creditos':0, 'ingles':False},
+                            'ARTI4104':{'creditos':0, 'ingles':False},
+                            'ARTI4102':{'creditos':0, 'ingles':False},
+                            'ARTI4201':{'creditos':12, 'ingles':False},
+                            'ARTI4203':{'creditos':8, 'ingles':False},
+                            'ARTI4205':{'creditos':12, 'ingles':False},
+                            'ARTI4202':{'creditos':8, 'ingles':False},
+                            'ARTI4204':{'creditos':8, 'ingles':False},
+                            'ARTI4103':{'creditos':20, 'ingles':True},
+                            'ARTI4106':{'creditos':20, 'ingles':False},
+                            'ARTI4301':{'creditos':28, 'ingles':False}
+                        }
+
 scrumdo_username=""
 scrumdo_password=""
 scrumdo_host="http://www.scrumdo.com"
